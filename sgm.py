@@ -181,27 +181,27 @@ def aggregate_costs(cost_volume, parameters, paths):
                 main_aggregation[y, :, :] = get_path_cost(east, 1, parameters)
                 opposite_aggregation[y, :, :] = np.flip(get_path_cost(west, 1, parameters), axis=0)
 
-        # if main.direction == SE.direction:
-        #     for offset in range(start, end):
-        #         south_east = cost_volume.diagonal(offset=offset).T
-        #         north_west = np.flip(south_east, axis=0)
-        #         dim = south_east.shape[0]
-        #         y_se_idx, x_se_idx = get_indices(offset, dim, SE.direction, None)
-        #         y_nw_idx = np.flip(y_se_idx, axis=0)
-        #         x_nw_idx = np.flip(x_se_idx, axis=0)
-        #         main_aggregation[y_se_idx, x_se_idx, :] = get_path_cost(south_east, 1, parameters)
-        #         opposite_aggregation[y_nw_idx, x_nw_idx, :] = get_path_cost(north_west, 1, parameters)
+        if main.direction == SE.direction:
+            for offset in range(start, end):
+                south_east = cost_volume.diagonal(offset=offset).T
+                north_west = np.flip(south_east, axis=0)
+                dim = south_east.shape[0]
+                y_se_idx, x_se_idx = get_indices(offset, dim, SE.direction, None)
+                y_nw_idx = np.flip(y_se_idx, axis=0)
+                x_nw_idx = np.flip(x_se_idx, axis=0)
+                main_aggregation[y_se_idx, x_se_idx, :] = get_path_cost(south_east, 1, parameters)
+                opposite_aggregation[y_nw_idx, x_nw_idx, :] = get_path_cost(north_west, 1, parameters)
 
-        # if main.direction == SW.direction:
-        #     for offset in range(start, end):
-        #         south_west = np.flipud(cost_volume).diagonal(offset=offset).T
-        #         north_east = np.flip(south_west, axis=0)
-        #         dim = south_west.shape[0]
-        #         y_sw_idx, x_sw_idx = get_indices(offset, dim, SW.direction, height - 1)
-        #         y_ne_idx = np.flip(y_sw_idx, axis=0)
-        #         x_ne_idx = np.flip(x_sw_idx, axis=0)
-        #         main_aggregation[y_sw_idx, x_sw_idx, :] = get_path_cost(south_west, 1, parameters)
-        #         opposite_aggregation[y_ne_idx, x_ne_idx, :] = get_path_cost(north_east, 1, parameters)
+        if main.direction == SW.direction:
+            for offset in range(start, end):
+                south_west = np.flipud(cost_volume).diagonal(offset=offset).T
+                north_east = np.flip(south_west, axis=0)
+                dim = south_west.shape[0]
+                y_sw_idx, x_sw_idx = get_indices(offset, dim, SW.direction, height - 1)
+                y_ne_idx = np.flip(y_sw_idx, axis=0)
+                x_ne_idx = np.flip(x_sw_idx, axis=0)
+                main_aggregation[y_sw_idx, x_sw_idx, :] = get_path_cost(south_west, 1, parameters)
+                opposite_aggregation[y_ne_idx, x_ne_idx, :] = get_path_cost(north_east, 1, parameters)
 
         aggregation_volume[:, :, :, path_id] = main_aggregation
         aggregation_volume[:, :, :, path_id + 1] = opposite_aggregation
